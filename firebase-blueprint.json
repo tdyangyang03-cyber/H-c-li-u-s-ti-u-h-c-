@@ -1,0 +1,148 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Represents a teacher or a student in the system.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "role": { "type": "string", "enum": ["teacher", "student"] },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "username": { "type": "string", "description": "Used by students to log in if not using Gmail" },
+        "password": { "type": "string", "description": "Plain text for student login (simple system as requested)" },
+        "avatar": { "type": "string" },
+        "classId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "role", "name"]
+    },
+    "Topic": {
+      "title": "Topic",
+      "description": "A science topic (e.g., Chất, Năng lượng).",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "order": { "type": "number" },
+        "icon": { "type": "string" }
+      },
+      "required": ["title", "order"]
+    },
+    "LessonCategory": {
+      "title": "Lesson Category",
+      "description": "A category of lessons within a topic (e.g., Đặc điểm của nấm).",
+      "type": "object",
+      "properties": {
+        "topicId": { "type": "string" },
+        "title": { "type": "string" },
+        "order": { "type": "number" }
+      },
+      "required": ["topicId", "title", "order"]
+    },
+    "LearningMaterial": {
+      "title": "Learning Material",
+      "description": "A specific piece of learning content (video, game, pdf, etc.).",
+      "type": "object",
+      "properties": {
+        "categoryId": { "type": "string" },
+        "title": { "type": "string" },
+        "type": { "type": "string", "enum": ["elearning", "canva", "genially", "slides", "video", "pdf", "image", "game", "assignment", "discovery"] },
+        "url": { "type": "string" },
+        "order": { "type": "number" },
+        "icon": { "type": "string" }
+      },
+      "required": ["categoryId", "title", "type", "url"]
+    },
+    "Submission": {
+      "title": "Submission",
+      "description": "A student's assignment submission.",
+      "type": "object",
+      "properties": {
+        "lessonId": { "type": "string" },
+        "studentId": { "type": "string" },
+        "studentName": { "type": "string" },
+        "fileUrl": { "type": "string" },
+        "fileName": { "type": "string" },
+        "submittedAt": { "type": "string", "format": "date-time" },
+        "grade": { "type": "number" },
+        "feedback": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "graded"] }
+      },
+      "required": ["lessonId", "studentId", "fileUrl"]
+    },
+    "Attendance": {
+      "title": "Attendance",
+      "description": "Daily attendance records.",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string", "format": "date" },
+        "records": { 
+          "type": "object",
+          "description": "Map of studentId to status (present, absent, late)"
+        }
+      },
+      "required": ["date", "records"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "Announcements from teachers.",
+      "type": "object",
+      "properties": {
+        "teacherId": { "type": "string" },
+        "message": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "type": { "type": "string", "enum": ["general", "assignment", "schedule"] }
+      },
+      "required": ["teacherId", "message", "createdAt"]
+    },
+    "Progress": {
+      "title": "Progress",
+      "description": "Track student completion of lessons.",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string" },
+        "lessonId": { "type": "string" },
+        "topicId": { "type": "string" },
+        "completed": { "type": "boolean" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["studentId", "lessonId", "completed"]
+    },
+    "MaterialType": {
+      "title": "Material Type",
+      "description": "Customizable types for learning materials.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "value": { "type": "string" }
+      },
+      "required": ["title", "value"]
+    },
+    "Schedule": {
+      "title": "Schedule",
+      "description": "Class schedule or timetable.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "time": { "type": "string" },
+        "classId": { "type": "string" },
+        "teacherId": { "type": "string" },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "time", "teacherId"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": { "schema": "User", "description": "Profiles for teachers and students." },
+    "/topics/{topicId}": { "schema": "Topic", "description": "Subject topics." },
+    "/categories/{categoryId}": { "schema": "LessonCategory", "description": "Categories under topics." },
+    "/materials/{materialId}": { "schema": "LearningMaterial", "description": "Learning materials under categories." },
+    "/submissions/{submissionId}": { "schema": "Submission", "description": "Student homework." },
+    "/attendance/{date}": { "schema": "Attendance", "description": "Daily attendance logs." },
+    "/notifications/{notificationId}": { "schema": "Notification", "description": "Broadcast messages." },
+    "/users/{userId}/progress/{materialId}": { "schema": "Progress", "description": "Individual student progress per material." },
+    "/material_types/{typeId}": { "schema": "MaterialType", "description": "Customizable learning material types." },
+    "/schedules/{scheduleId}": { "schema": "Schedule", "description": "Class schedules." }
+  }
+}

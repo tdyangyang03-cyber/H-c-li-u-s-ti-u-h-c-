@@ -1,0 +1,11 @@
+{
+  "name": "Học Liệu Số Tiểu Học",
+  "description": "Hệ sinh thái học tập số kết hợp eLearning, AI giáo dục và Game hóa dành cho học sinh tiểu học.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
