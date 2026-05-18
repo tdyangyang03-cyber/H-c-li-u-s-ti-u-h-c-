@@ -17,11 +17,11 @@ service cloud.firestore {
     }
 
     function isTeacher() {
-      return isSignedIn() && getUserData(request.auth.uid).role == 'teacher';
+      return isSignedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid)) && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', '') == 'teacher';
     }
 
     function isStudent() {
-      return isSignedIn() && getUserData(request.auth.uid).role == 'student';
+      return isSignedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid)) && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', '') == 'student';
     }
     
     function isOwner(userId) {
@@ -29,7 +29,7 @@ service cloud.firestore {
     }
 
     function isLinkedStudent(userId) {
-      return isSignedIn() && getUserData(userId).linkedUid == request.auth.uid;
+      return isSignedIn() && exists(/databases/$(database)/documents/users/$(userId)) && get(/databases/$(database)/documents/users/$(userId)).data.get('linkedUid', '') == request.auth.uid;
     }
 
     // --- Validation Blueprints ---

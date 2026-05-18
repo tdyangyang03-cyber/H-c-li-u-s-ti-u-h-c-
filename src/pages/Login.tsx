@@ -18,6 +18,11 @@ export default function Login({ onStudentLogin }: LoginProps) {
 
   const loginWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
+    // Prompt for account selection to ensure it doesn't get stuck
+    provider.setCustomParameters({
+      prompt: 'select_account'
+    });
+    
     try {
       await signInWithPopup(auth, provider);
     } catch (error: any) {
@@ -25,7 +30,9 @@ export default function Login({ onStudentLogin }: LoginProps) {
       if (error?.code === 'auth/popup-blocked') {
         alert('Trình duyệt đã chặn cửa sổ đăng nhập. Vui lòng cho phép hiện popup và thử lại!');
       } else if (error?.code === 'auth/admin-restricted-operation') {
-        alert('Tài khoản này hiện đang bị hạn chế hoặc tính năng Google Login chưa được bật hoàn toàn trong Firebase console.');
+        alert('Lỗi: auth/admin-restricted-operation. Điều này thường do Google Login chưa được bật trong Firebase Console (Authentication > Sign-in method). Vui lòng kiểm tra lại cấu hình Firebase.');
+      } else if (error?.code === 'auth/operation-not-allowed') {
+        alert('Tính năng đăng nhập này chưa được bật trong cấu hình Firebase. Vui lòng kiểm tra tab Sign-in method.');
       } else {
         alert(`Đăng nhập thất bại: ${error?.message || 'Vui lòng thử lại!'}`);
       }
